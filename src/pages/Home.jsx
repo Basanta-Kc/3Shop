@@ -1,6 +1,7 @@
 import NavBar from "../components/NavBar";
 import BannerCarousel from "../components/Carousel";
 import Products from "../components/Products";
+import Footer from "../components/Footer";
 
 export default function Home() {
   // NavBar
@@ -9,7 +10,6 @@ export default function Home() {
   // Featured Products
   return (
     <>
-      <NavBar />
       <BannerCarousel />
       <Products title="Featured Products" />
       <Products title="Latest Products" />

@@ -12,6 +12,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { Link } from "react-router-dom";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -154,7 +155,7 @@ function NavBar() {
               ))}
             </Menu>
           </Box>
-          <Button sx={{ color: "white" }} variant="text">
+          <Button sx={{ color: "white" }} component={Link} variant="text" to="/sign-in">
             Login
           </Button>
         </Toolbar>

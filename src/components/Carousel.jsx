@@ -5,19 +5,19 @@ export default function BannerCarousel() {
   return (
     <Carousel>
       <img
-        height="700px"
+        height="auto"
         width="100%"
         src={SalesImg}
         alt="Sales Banner For January"
       />
       <img
-        height="700px"
+        height="auto"
         width="100%"
         src={SalesImg}
         alt="Sales Banner For January"
       />
       <img
-        height="700px"
+        height="auto"
         width="100%"
         src={SalesImg}
         alt="Sales Banner For January"
