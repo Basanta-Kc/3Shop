@@ -12,8 +12,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Alert from "@mui/material/Alert";
 import * as yup from "yup";
 import axios from "axios";
-import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { toast, Bounce } from "react-toastify";
 
 const schema = yup
   .object({
@@ -28,6 +29,7 @@ const schema = yup
   .required();
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -41,10 +43,18 @@ export default function SignUp() {
       return axios.post("http://localhost:3000/api/auth/sign-up", data);
     },
     onSuccess: (res) => {
-      
-    },
-    onError: (error) => {
-      console.log(error);
+      toast.success(res.data.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      navigate("/sign-in");
     },
   });
   // <input value={username} name='username' onChange={(e) => setUsernmae(e.target.value)} />
@@ -53,7 +63,6 @@ export default function SignUp() {
     mutation.mutate(data);
   };
 
-  console.log(mutation.error);
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -142,10 +151,10 @@ export default function SignUp() {
             type="submit"
             fullWidth
             variant="contained"
-            disabled={mutation.isLoading}
+            disabled={mutation.isPending}
             sx={{ mt: 3, mb: 2 }}
           >
-            Signing up....
+            {mutation.isPending ? "Signing up..." : "Sign Up"}
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
