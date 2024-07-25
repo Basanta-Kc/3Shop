@@ -38,7 +38,7 @@ export default function SignUp() {
 
   const mutation = useMutation({
     mutationFn: (data) => {
-      return axios.post("http://localhost:3000/api/auth/sign-in", data);
+      return axios.post("/api/auth/sign-in", data);
     },
     onSuccess: (res) => {
       setAuthState(res.data);

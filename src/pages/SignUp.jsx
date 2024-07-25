@@ -40,7 +40,7 @@ export default function SignUp() {
 
   const mutation = useMutation({
     mutationFn: (data) => {
-      return axios.post("http://localhost:3000/api/auth/sign-up", data);
+      return axios.post("/api/auth/sign-up", data);
     },
     onSuccess: (res) => {
       toast.success(res.data.message, {
@@ -55,6 +55,7 @@ export default function SignUp() {
         transition: Bounce,
       });
       navigate("/sign-in");
+      localStorage.setItem("authState", JSON.stringify(res.data));
     },
   });
   // <input value={username} name='username' onChange={(e) => setUsernmae(e.target.value)} />

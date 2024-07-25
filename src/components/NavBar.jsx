@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../App";
 
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard"];
+const settings = ["Profile", "Account"];
 
 function NavBar() {
   const { authState, setAuthState } = useContext(AuthContext);
@@ -160,10 +160,20 @@ function NavBar() {
                   <Typography
                     onClick={() => {
                       setAuthState(null);
+                      localStorage.removeItem("authState");
                     }}
                     textAlign="center"
                   >
                     Logout
+                  </Typography>
+                </MenuItem>
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Typography
+                    component={Link}
+                    to="/dashboard"
+                    textAlign="center"
+                  >
+                    Dashboard
                   </Typography>
                 </MenuItem>
               </Menu>
