@@ -12,13 +12,14 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard"];
+const settings = ["Profile", "Account"];
 
 function NavBar() {
+  const navigate = useNavigate();
   const { authState, setAuthState } = useContext(AuthContext);
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -132,7 +133,10 @@ function NavBar() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar
+                    alt={authState.user.firstName}
+                    src="/static/images/avatar/2.jpg"
+                  />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -156,10 +160,23 @@ function NavBar() {
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
+                {authState.user.roles.includes("Admin") && (
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Typography
+                      onClick={() => {
+                        navigate("/dashboard");
+                      }}
+                      textAlign="center"
+                    >
+                      Dashboard
+                    </Typography>
+                  </MenuItem>
+                )}
                 <MenuItem onClick={handleCloseUserMenu}>
                   <Typography
                     onClick={() => {
                       setAuthState(null);
+                      localStorage.removeItem("authState");
                     }}
                     textAlign="center"
                   >

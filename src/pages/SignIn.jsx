@@ -42,6 +42,7 @@ export default function SignUp() {
     },
     onSuccess: (res) => {
       setAuthState(res.data);
+      localStorage.setItem("authState", JSON.stringify(res.data));
       toast.success(res.data.message, {
         position: "top-right",
         autoClose: 5000,
