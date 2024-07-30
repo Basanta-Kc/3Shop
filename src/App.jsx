@@ -16,7 +16,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 import DefaultLayout from "./layout/DefaultLayout";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
-import Stats from "./components/dashboard/Stats";
 import Customers from "./components/dashboard/Customers";
 
 const queryClient = new QueryClient();
