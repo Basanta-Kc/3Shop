@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
+import { SERVER_URL } from "../constant";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account"];
@@ -135,7 +136,10 @@ function NavBar() {
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar
                     alt={authState.user.firstName}
-                    src="/static/images/avatar/2.jpg"
+                    src={
+                      SERVER_URL +
+                      authState.user.profileImage.replace("\\", "/")
+                    }
                   />
                 </IconButton>
               </Tooltip>
