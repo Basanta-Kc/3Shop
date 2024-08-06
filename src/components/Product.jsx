@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -6,19 +7,14 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 
-import HeadphoneImage from "../assets/carousel/headphone.jpg";
-
-export default function Product() {
+export default function Product({ product }) {
+  const { image, name, price, quantity } = product;
   return (
     <Card sx={{ maxWidth: 345 }}>
-      <CardMedia
-        sx={{ height: 170 }}
-        image={HeadphoneImage}
-        title="green iguana"
-      />
+      <CardMedia sx={{ height: 170 }} image={image} title="green iguana" />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          Lizard
+          {name}
         </Typography>
         <Rating name="read-only" value="5" readOnly />
         <Typography variant="body2" color="text.secondary">
@@ -27,8 +23,8 @@ export default function Product() {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
+        <Button size="small">Rs {price}</Button>
+        <Button size="small">Quanity {quantity}</Button>
       </CardActions>
     </Card>
   );

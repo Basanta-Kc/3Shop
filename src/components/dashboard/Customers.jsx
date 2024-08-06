@@ -27,6 +27,7 @@ import { SERVER_URL } from "../../constant";
 import { toast, Bounce } from "react-toastify";
 
 export default function Customers() {
+  const [userToBeEdited, setUserToBeEdited] = useState(null);
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -60,7 +61,7 @@ export default function Customers() {
         theme: "light",
         transition: Bounce,
       });
-      refetch()
+      refetch();
     },
   });
 
@@ -83,7 +84,11 @@ export default function Customers() {
 
   return (
     <>
-      <AddUserDialog handleClose={handleClose} open={open} />
+      <AddUserDialog
+        handleClose={handleClose}
+        open={open}
+        user={userToBeEdited}
+      />
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Box sx={{ my: 1, display: "flex", justifyContent: "space-between" }}>
@@ -139,7 +144,7 @@ export default function Customers() {
                   </>
                 )}
                 {data?.data?.data?.map(
-                  ({ firstName, lastName, _id, email, profileImage }) => (
+                  ({ firstName, lastName, _id, email, profileImage, roles }) => (
                     <TableRow
                       key={_id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -154,7 +159,20 @@ export default function Customers() {
                       <TableCell>{email}</TableCell>
                       <TableCell>
                         {" "}
-                        <IconButton color="secondary" aria-label="delete">
+                        <IconButton
+                          color="secondary"
+                          aria-label="edit"
+                          onClick={() => {
+                            setOpen(true);
+                            setUserToBeEdited({
+                              id: _id,
+                              firstName,
+                              lastName,
+                              email,
+                              isAdmin: roles?.includes("Admin"),
+                            });
+                          }}
+                        >
                           <CreateIcon />
                         </IconButton>
                         <IconButton

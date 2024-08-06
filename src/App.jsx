@@ -33,6 +33,7 @@ function AdminRoutes() {
 }
 
 function App() {
+  
   const [authState, setAuthState] = useState(() => {
     console.log(JSON.parse(localStorage.getItem("authState")));
     return JSON.parse(localStorage.getItem("authState"));

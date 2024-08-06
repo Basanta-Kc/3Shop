@@ -4,13 +4,15 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { TextField, FormControlLabel, Checkbox } from "@mui/material";
+import { TextField, FormControlLabel, Checkbox, Alert } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast, Bounce } from "react-toastify";
 import axios from "axios";
+
+// Get QueryClient from the context
 
 const schema = yup
   .object({
@@ -25,16 +27,21 @@ const schema = yup
   })
   .required();
 
-export default function AddUserDialog({ handleClose, open, }) {
+export default function AddUserDialog({ handleClose, open, user }) {
+  const queryClient = useQueryClient();
+
   const {
     register,
     handleSubmit,
     control,
     reset,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm({
     resolver: yupResolver(schema),
+    values: user, // { firstName:}
   });
+
+  console.log(dirtyFields);
 
   const mutation = useMutation({
     mutationFn: (data) => {
@@ -43,9 +50,19 @@ export default function AddUserDialog({ handleClose, open, }) {
       formData.append("firstName", data.firstName);
       formData.append("lastName", data.lastName);
       formData.append("email", data.email);
-      formData.append("password", data.password);
+      if (dirtyFields.password) formData.append("password", data.password);
       formData.append("isAdmin", data.isAdmin);
-      formData.append("profileImage", data.profileImage[0]);
+      if (formData?.profileImage?.length > 0)
+        formData.append("profileImage", data.profileImage[0]);
+
+      if (user) {
+        return axios.patch(`/api/admin/users/${user.id}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
+
       return axios.post("/api/admin/users", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -66,6 +83,10 @@ export default function AddUserDialog({ handleClose, open, }) {
       });
       handleClose();
       reset();
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+    onError: (err) => {
+      console.log(err);
     },
   });
 
@@ -83,8 +104,14 @@ export default function AddUserDialog({ handleClose, open, }) {
           onSubmit: handleSubmit(onSubmit),
         }}
       >
-        <DialogTitle>{"Add New User"}</DialogTitle>
+        <DialogTitle>{user ? "Edit User" : "Add New User"}</DialogTitle>
         <DialogContent sx={{ width: "600px" }}>
+          {mutation.isError && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {mutation.error.response.data?.errors?.[0]?.message ??
+                "Something went wrong."}
+            </Alert>
+          )}
           <input type="file" {...register("profileImage")} />
           <TextField
             sx={{ mb: 1 }}
@@ -154,7 +181,7 @@ export default function AddUserDialog({ handleClose, open, }) {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button variant="contained" type="submit">
-            {"Add User"}
+            {user ? "Edit User" : "Add User"}
           </Button>
         </DialogActions>
       </Dialog>

@@ -138,7 +138,7 @@ function NavBar() {
                     alt={authState.user.firstName}
                     src={
                       SERVER_URL +
-                      authState.user.profileImage.replace("\\", "/")
+                      authState.user.profileImage?.replace("\\", "/")
                     }
                   />
                 </IconButton>
