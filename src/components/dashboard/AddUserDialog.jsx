@@ -41,11 +41,8 @@ export default function AddUserDialog({ handleClose, open, user }) {
     values: user, // { firstName:}
   });
 
-  console.log(dirtyFields);
-
   const mutation = useMutation({
     mutationFn: (data) => {
-      console.log(data);
       const formData = new FormData();
       formData.append("firstName", data.firstName);
       formData.append("lastName", data.lastName);
@@ -84,9 +81,6 @@ export default function AddUserDialog({ handleClose, open, user }) {
       handleClose();
       reset();
       queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-    onError: (err) => {
-      console.log(err);
     },
   });
 

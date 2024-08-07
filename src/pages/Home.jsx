@@ -15,7 +15,6 @@ export default function Home() {
       return axios.get("/api/home/products");
     },
   });
-  console.log({ data });
   return (
     <>
       <BannerCarousel />

@@ -15,6 +15,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 import { SERVER_URL } from "../constant";
+import CartIcon from "./CartIcon";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account"];
@@ -130,8 +131,9 @@ function NavBar() {
             ))}
           </Box>
 
+          <CartIcon />
           {authState ? (
-            <Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0, ml: 2 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar

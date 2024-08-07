@@ -5,11 +5,14 @@ import {
   Outlet,
   Navigate,
 } from "react-router-dom";
-import { useState, createContext, useContext } from "react";
+
+import { useState, createContext, useContext, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import AllProducts from "./pages/AllProducts";
+import { Cart } from "./pages/Cart";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -32,21 +35,60 @@ function AdminRoutes() {
   );
 }
 
+function PaymentSuccessfull() {
+  const { setCart } = useContext(AuthContext);
+
+  useEffect(() => {
+    setCart([]);
+  }, []);
+
+  return <h2>payment successfull</h2>;
+}
+
 function App() {
-  
+  // Todo: useDebounce hoook
+  // Todo: Refactor to different provider
   const [authState, setAuthState] = useState(() => {
-    console.log(JSON.parse(localStorage.getItem("authState")));
     return JSON.parse(localStorage.getItem("authState"));
   });
+
+  // Todo: refactor to diffenrent povider
+  const [cart, setCart] = useState(() => {
+    return JSON.parse(localStorage.getItem("cart")) ?? [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  const addToCart = (product) => {
+    const productExist = cart.find(({ _id }) => _id === product._id);
+    if (productExist) {
+      productExist.orderQuantity += 1;
+      setCart([...cart]);
+    } else {
+      product.orderQuantity = 1;
+      setCart([...cart, product]);
+    }
+  };
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <AuthContext.Provider value={{ authState, setAuthState }}>
+        <AuthContext.Provider
+          value={{ authState, setAuthState, cart, setCart, addToCart }}
+        >
           <ToastContainer />
           <BrowserRouter>
             <Routes>
               <Route element={<DefaultLayout />}>
                 <Route path="/" element={<Home />} />
+                <Route path="/products" element={<AllProducts />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/success" element={<PaymentSuccessfull />} />
+                <Route
+                  path="/cancel"
+                  element={<h1>your payment has been cancelled.</h1>}
+                />
               </Route>
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/sign-up" element={<SignUp />} />
@@ -65,3 +107,10 @@ function App() {
 }
 
 export default App;
+// todo: order table
+// todo: authenticaion expire, auth context, cart context, debounce (custom hook)
+// graphql (crud)
+// websocket (sockeio) simple chat application
+// eventloop (theory)
+// typescript
+// optional (redux)
