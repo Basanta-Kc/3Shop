@@ -20,6 +20,7 @@ import "react-toastify/dist/ReactToastify.css";
 import DefaultLayout from "./layout/DefaultLayout";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Customers from "./components/dashboard/Customers";
+import UserOrders from "./pages/Orders";
 
 const queryClient = new QueryClient();
 
@@ -36,12 +37,6 @@ function AdminRoutes() {
 }
 
 function PaymentSuccessfull() {
-  const { setCart } = useContext(AuthContext);
-
-  useEffect(() => {
-    setCart([]);
-  }, []);
-
   return <h2>payment successfull</h2>;
 }
 
@@ -84,9 +79,10 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/products" element={<AllProducts />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/orders" element={<UserOrders />} />
                 <Route path="/success" element={<PaymentSuccessfull />} />
                 <Route
-                  path="/cancel"
+                  path="/cancel"s
                   element={<h1>your payment has been cancelled.</h1>}
                 />
               </Route>

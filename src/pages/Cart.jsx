@@ -16,12 +16,13 @@ import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 
 export function Cart() {
-  const { cart } = useContext(AuthContext);
+  const { cart, setCart } = useContext(AuthContext);
   const mutation = useMutation({
     mutationFn: (data) => {
       return axios.post("/api/checkout", data);
     },
     onSuccess: (res) => {
+      setCart([]);
       location.replace(res.data.url);
     },
   });
