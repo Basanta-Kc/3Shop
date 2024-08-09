@@ -22,7 +22,7 @@ const settings = ["Profile", "Account"];
 
 function NavBar() {
   const navigate = useNavigate();
-  const { authState, setAuthState } = useContext(AuthContext);
+  const { authState, isAuthenticated, setAuthState } = useContext(AuthContext);
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -132,7 +132,7 @@ function NavBar() {
           </Box>
 
           <CartIcon />
-          {authState ? (
+          {isAuthenticated() && authState ? (
             <Box sx={{ flexGrow: 0, ml: 2 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

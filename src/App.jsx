@@ -47,6 +47,18 @@ function App() {
     return JSON.parse(localStorage.getItem("authState"));
   });
 
+  const isAuthenticated = () => {
+    // Parse the given expiration date
+    const expDate = new Date(authState.expiresAt);
+
+    // Get the current date and time
+    const currentDate = new Date();
+
+    console.log(expDate, currentDate)
+    // Compare the expiration date with the current date
+    return currentDate < expDate;
+  };
+
   // Todo: refactor to diffenrent povider
   const [cart, setCart] = useState(() => {
     return JSON.parse(localStorage.getItem("cart")) ?? [];
@@ -70,7 +82,7 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <AuthContext.Provider
-          value={{ authState, setAuthState, cart, setCart, addToCart }}
+          value={{ authState, setAuthState, isAuthenticated, cart, setCart, addToCart }}
         >
           <ToastContainer />
           <BrowserRouter>
@@ -82,7 +94,8 @@ function App() {
                 <Route path="/orders" element={<UserOrders />} />
                 <Route path="/success" element={<PaymentSuccessfull />} />
                 <Route
-                  path="/cancel"s
+                  path="/cancel"
+                  s
                   element={<h1>your payment has been cancelled.</h1>}
                 />
               </Route>
