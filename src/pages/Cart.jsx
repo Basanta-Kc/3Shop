@@ -9,14 +9,13 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
-import { useContext } from "react";
-import { AuthContext } from "../App";
 import { SERVER_URL } from "../constant";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
+import { useCart } from "../context/CartContext";
 
 export function Cart() {
-  const { cart, setCart } = useContext(AuthContext);
+  const { cart, setCart } = useCart();
   const mutation = useMutation({
     mutationFn: (data) => {
       return axios.post("/api/checkout", data);
@@ -66,7 +65,7 @@ export function Cart() {
         }, 0)}
       </ListItem>
       {cart.length > 0 && (
-        <Button onClick={() => mutation.mutate(cart)}>
+        <Button variant="contained" onClick={() => mutation.mutate(cart)}>
           Proceed to payment
         </Button>
       )}

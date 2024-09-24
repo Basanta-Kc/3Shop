@@ -8,11 +8,10 @@ import Chip from "@mui/material/Chip";
 import { SERVER_URL } from "../constant";
 import IconButton from "@mui/material/IconButton";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { useContext } from "react";
-import { AuthContext } from "../App";
+import { useCart } from "../context/CartContext";
 
 export default function Product({ product }) {
-  const { addToCart } = useContext(AuthContext);
+  const { addToCart } = useCart();
   const { image, name, price, quantity } = product;
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -46,3 +45,5 @@ export default function Product({ product }) {
     </Card>
   );
 }
+
+

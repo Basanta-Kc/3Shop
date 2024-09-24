@@ -25,6 +25,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import AddUserDialog from "./AddUserDialog";
 import { SERVER_URL } from "../../constant";
 import { toast, Bounce } from "react-toastify";
+import useDebounce from "../../hooks/useDecounce";
 
 export default function Customers() {
   const [userToBeEdited, setUserToBeEdited] = useState(null);
@@ -40,6 +41,7 @@ export default function Customers() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search)
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -70,13 +72,13 @@ export default function Customers() {
     setPage(0);
   };
   const { isPending, data, refetch } = useQuery({
-    queryKey: ["users", { rowsPerPage, page, search }],
+    queryKey: ["users", { rowsPerPage, page, debouncedSearch }],
     queryFn: () => {
       return axios.get("/api/admin/users", {
         params: {
           page: page + 1,
           limit: rowsPerPage,
-          search,
+          search: debouncedSearch,
         },
       });
     },

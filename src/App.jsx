@@ -22,70 +22,33 @@ import DashboardLayout from "./components/dashboard/DashboardLayout";
 import Customers from "./components/dashboard/Customers";
 import UserOrders from "./pages/Orders";
 
+import { AuthProvider, AuthContext } from "./context/AuthContext";
+
 const queryClient = new QueryClient();
 
-export const AuthContext = createContext();
-
+// todo: keep this in speaparate component
 function AdminRoutes() {
-  const { authState } = useContext(AuthContext);
+  const { authState, isAuthenticated } = useContext(AuthContext);
 
-  return authState.user.roles.includes("Admin") ? (
+  return isAuthenticated() && authState.user.roles.includes("Admin") ? (
     <Outlet />
   ) : (
     <Navigate to="/" />
   );
 }
 
+//todo: keep in spearate component
 function PaymentSuccessfull() {
   return <h2>payment successfull</h2>;
 }
 
 function App() {
-  // Todo: useDebounce hoook
-  // Todo: Refactor to different provider
-  const [authState, setAuthState] = useState(() => {
-    return JSON.parse(localStorage.getItem("authState"));
-  });
-
-  const isAuthenticated = () => {
-    // Parse the given expiration date
-    const expDate = new Date(authState.expiresAt);
-
-    // Get the current date and time
-    const currentDate = new Date();
-
-    console.log(expDate, currentDate)
-    // Compare the expiration date with the current date
-    return currentDate < expDate;
-  };
-
-  // Todo: refactor to diffenrent povider
-  const [cart, setCart] = useState(() => {
-    return JSON.parse(localStorage.getItem("cart")) ?? [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
-
-  const addToCart = (product) => {
-    const productExist = cart.find(({ _id }) => _id === product._id);
-    if (productExist) {
-      productExist.orderQuantity += 1;
-      setCart([...cart]);
-    } else {
-      product.orderQuantity = 1;
-      setCart([...cart, product]);
-    }
-  };
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <AuthContext.Provider
-          value={{ authState, setAuthState, isAuthenticated, cart, setCart, addToCart }}
-        >
-          <ToastContainer />
-          <BrowserRouter>
+        <ToastContainer />
+        <BrowserRouter>
+          <AuthProvider>
             <Routes>
               <Route element={<DefaultLayout />}>
                 <Route path="/" element={<Home />} />
@@ -95,7 +58,6 @@ function App() {
                 <Route path="/success" element={<PaymentSuccessfull />} />
                 <Route
                   path="/cancel"
-                  s
                   element={<h1>your payment has been cancelled.</h1>}
                 />
               </Route>
@@ -108,18 +70,24 @@ function App() {
               </Route>
               <Route path="*" element={<h2>page not found</h2>} />
             </Routes>
-          </BrowserRouter>
-        </AuthContext.Provider>
+          </AuthProvider>
+        </BrowserRouter>
       </QueryClientProvider>
     </>
   );
 }
 
 export default App;
-// todo: order table
+
+// Student Task:
+// 1. When clicked on procedd to payment, if unauthenticated redirect to sigin
+// 2. Products CRUD dashboard
+// 3. Order Listing in dashboard
+// 4. implment searching in prodcuts page
+// 5. Add navingation link for products & orders (user profile drop down)
+
 // todo: authenticaion expire, auth context, cart context, debounce (custom hook)
-// graphql (crud)
-// websocket (sockeio) simple chat application
-// eventloop (theory)
-// typescript
-// optional (redux)
+// graphql (crud) -> thursday firday
+// websocket (sockeio) simple chat application -> tuesday
+// eventloop (theory) -> wedgesday
+// typescript, next.js -> next week -> (postgres, todoapp)

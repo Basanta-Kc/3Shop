@@ -13,10 +13,8 @@ import Alert from "@mui/material/Alert";
 import * as yup from "yup";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { toast, Bounce } from "react-toastify";
 import { useContext } from "react";
-import { AuthContext } from "../App";
+import { AuthContext } from "../context/AuthContext";
 
 const schema = yup
   .object({
@@ -25,9 +23,8 @@ const schema = yup
   })
   .required();
 
-export default function SignUp() {
-  const { setAuthState } = useContext(AuthContext);
-  const navigate = useNavigate();
+export default function SignIn() {
+  const { login } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -41,21 +38,9 @@ export default function SignUp() {
       return axios.post("/api/auth/sign-in", data);
     },
     onSuccess: (res) => {
-      setAuthState(res.data);
-      localStorage.setItem("authState", JSON.stringify(res.data));
-      toast.success(res.data.message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
-      navigate("/");
+      login(res.data);
     },
+    onError: (err) => console.log(err),
   });
 
   const onSubmit = (data) => {
